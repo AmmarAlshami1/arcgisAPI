@@ -16,18 +16,21 @@ document.addEventListener("DOMContentLoaded", () => {
         zoom: 4,
       });
   
-      setTimeout(() => {
-        //   view.zoom = 10;
-        //   view.center = [-140, 40];
-      }, 3000);
-  
+    //   setTimeout(() => {
+    //     //   view.zoom = 10;
+    //     //   view.center = [-140, 40];
+        
+    //   }, 3000);
+   
       const featureLayer = new FeatureLayer({
+        
         url: "https://services.gis.ca.gov/arcgis/rest/services/Boundaries/CA_Counties/FeatureServer/0",
         popupTemplate: {
           title: "CA countries",
           content:
             "OBJECTID: {OBJECTID}<br>Population : {Population}<br>AREA_ID: {AREA_ID}",
         },
+       
       });
   
       view.whenLayerView(featureLayer).then((layerView) => {
@@ -51,34 +54,55 @@ document.addEventListener("DOMContentLoaded", () => {
           // Add event listener to the filter button
           const filterButton = document.getElementById("btnfilter");
           filterButton.addEventListener("click", () => {
+            
               // Get selected field names and filter inputs
-              const field = fieldSelect1.value;
+              const field1 = fieldSelect1.value;
               const fieldSelect1Value = fieldSelect1.value;
               const filterInput1 = document.getElementById("filterInput").value
-              const fieldSelect2Value = fieldSelect2.value;
-              const filterInput2 = document.getElementById("filterInput2").value
               // Define the expression to filter features
-              const optionType = document.getElementById(field).fieldType;
+              const optionType = document.getElementById(field1).fieldType;
                 if (optionType === "integer" || optionType === "double"){
-              featureLayer.definitionExpression =
+                   var Expression1 =
               fieldSelect1Value +
               "=" +
-              filterInput1 +
-              "AND " +
-              fieldSelect2Value +
-              "=" +
-              filterInput2;}
+              filterInput1 
+            //   +
+            //   "AND " +
+            //   fieldSelect2Value +
+            //   "=" +
+            //   filterInput2;
+        }
               else if (optionType === "string") {
-                featureLayer.definitionExpression =
+            var Expression1 =
                   "upper(" + fieldSelect1Value + ") LIKE '%" + filterInput1.toUpperCase() + 
-                  "%'"+"AND"+ "upper(" + fieldSelect2Value + ") LIKE '%" + filterInput2.toUpperCase() + "%'"
+                  "%'"
                 }
               else {
                     featureLayer.definitionExpression = "1=1"; // AREA_ID = 32520284
                   }
-                
-      
-        });
+
+        const field2 = fieldSelect2.value;
+        const fieldSelect2Value = fieldSelect2.value;
+        const filterInput2 = document.getElementById("filterInput2").value
+        // Define the expression to filter features
+        const optionType2 = document.getElementById(field2).fieldType;
+          if (optionType2 === "integer" || optionType === "double"){
+             var Expression2 =
+        fieldSelect2Value +
+        "=" +
+        filterInput2 
+      }
+        else if (optionType2 === "string") {
+      var Expression2 =
+            "upper(" + fieldSelect2Value + ") LIKE '%" + filterInput2.toUpperCase() + "%'"
+          }
+        else {
+              featureLayer.definitionExpression = "1=1"; // AREA_ID = 32520284
+            }
+            const combinedExpression = Expression1+ 'AND' +Expression2
+                console.log(combinedExpression)
+            featureLayer.definitionExpression = combinedExpression
+            });
             
       });
   
